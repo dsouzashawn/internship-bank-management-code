@@ -1,0 +1,388 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+#include<string.h>
+#include<unistd.h>
+#include<ctype.h>
+#include<conio.h>
+
+struct bank
+{
+    int account_no,phone_no;
+    char name[20],fname[20];
+    int dobdate,dobmonth,dobyear,age;
+    char address[100],acc_type[20];
+    int min_amt;
+    char aadhar[20],pan[20];
+};
+
+void enter_menu();
+
+void create();
+
+void menu();
+void deposit_money();
+void withdraw_money();
+void transfer_money();
+void account_details();
+void transaction_details();
+void last_details();
+
+char name1[20] = "shawn";
+int acc_no=1234,amt=10000,dip_amt,with_amt,trans_amt,ac,count=0;
+
+void divider()
+{
+    for(int d=0;d<50;d++)
+    {
+        printf("-");
+    }
+}
+
+
+int main()
+{
+    int choice;
+    int select;
+    int acc_ver;
+
+    while(1)
+    {
+       enter_menu();
+       printf("\nEnter your choice : ");
+       scanf("%d",&select);
+
+
+       if(select==1)
+       {
+           create();
+       }
+
+
+
+       else if(select==2)
+       {
+           user:
+           printf("\nEnter your account number: ");
+           scanf("%d",&acc_ver);
+
+           if(acc_ver!=acc_no)
+           {
+               printf("INVALID USER\n");
+               goto user;
+           }
+
+            while(1)
+            {
+                menu();
+                printf("\nEnter your choice : ");
+                scanf("%d",&choice);
+
+                switch(choice)
+                {
+                    case 1:
+                        deposit_money();
+                        break;
+
+                    case 2:
+                        withdraw_money();
+                        break;
+
+                    case 3:
+                        transfer_money();
+                        break;
+
+                    case 4:
+                        account_details();
+                        break;
+
+                    case 5:
+                        transaction_details();
+                        break;
+
+                    case 6:
+                        last_details();
+                        exit(0);
+
+                    default:
+                        printf("*****INVALID CHOICE*****");
+                        break;
+                }
+
+
+            }
+       }
+
+
+
+       else
+       {
+            printf("\n*****Thankyou*****\n");
+            exit(0);
+       }
+
+
+
+    }
+    return 0;
+
+
+}
+
+
+void enter_menu()
+{
+    divider();
+    printf("\n\tWELCOME TO NITTE BANKING SYSTEM\n");
+
+    divider();
+    printf("\n1.Create an account\n");
+    printf("2.User login\n");
+    printf("3.Exit\n");
+}
+
+void create()
+{
+     struct bank obj;
+     printf("\nKINDLY FILL IN THE DETAILS: \n");
+
+     printf("\nEnter your name : ");
+     scanf("%s",&obj.name);
+
+     printf("\nEnter your fathers name : ");
+     scanf("%s",&obj.fname);
+
+     printf("\nEnter date of birth :\n");
+     printf("Date: ");
+     scanf("%d",&obj.dobdate);
+     printf("\nMonth: ");
+     scanf("%d",&obj.dobmonth);
+     printf("\nYear: ");
+     scanf("%d",&obj.dobyear);
+
+     printf("\nEnter your Age: ");
+     scanf("%d",&obj.age);
+
+     printf("\nEnter your Phone number: ");
+     scanf("%d",&obj.phone_no);
+
+     printf("\nEnter aadhar no. : ");
+     scanf("%s",&obj.aadhar);
+
+     printf("\nEnter pan no. : ");
+     scanf("%s",&obj.pan);
+
+     printf("\nEnter your address: ");
+     scanf("%s",&obj.address);
+
+     printf("\nAccount type (type 1 for savings and 2 for current): ");
+     scanf("%s",&obj.acc_type);
+
+     printf("\nEnter your account number: ");
+     scanf("%d",&obj.account_no);
+
+     printf("Initial deposition in bank account\n");
+     nitte:
+     printf("Enter the amount : ");
+     scanf("%d",&obj.min_amt);
+
+     if(obj.min_amt<500)
+     {
+         printf("\n(Kindly note minimum Rs 500 must be there in bank account)\n");
+         goto nitte;
+     }
+
+     printf("\n*****Account created successfully*****\n");
+
+     strcpy(name1,obj.name);
+     acc_no = obj.account_no;
+     amt =  obj.min_amt;
+}
+
+
+
+void menu()
+{
+    printf("\n\n");
+    divider();
+    printf("\n\tMENU\n");
+
+    divider();
+    printf("\n1.Deposit Money\n");
+    printf("2.Withdraw Money\n");
+    printf("3.Transfer Money\n");
+    printf("4.Account details\n");
+    printf("5.Transaction details\n");
+    printf("6.Exit\n");
+    divider();
+}
+
+
+
+
+void deposit_money()
+{
+    //write a code to enter the password
+
+    time_t tm;
+    time(&tm);
+    FILE *fp = fopen("Account.txt","a");
+    printf("\n\n*****DEPOSITING MONEY*****\n");
+    divider();
+    printf("\nEnter the amount to be deposited : ");
+    scanf("%d",&dip_amt);
+
+    amt += dip_amt;
+    printf("*****MONEY DEPOSITED*****\n");
+    printf("Current balance : %d\n",amt);
+    fprintf(fp,"\nRs%d had been deposited to your account\n",dip_amt);
+    fprintf(fp,"Date /time of transaction : %s\n",ctime(&tm));
+    count++;
+
+    fclose(fp);
+    printf("Press any key.....\n");
+    getch();
+
+}
+
+
+
+
+
+void withdraw_money()
+{
+    //write a code to enter the password
+
+    time_t tm;
+    time(&tm);
+    FILE *fp = fopen("Account.txt","a");
+    printf("\n\n*****WITHDRAWING MONEY*****\n");
+    divider();
+    label:
+    printf("\nEnter the amount you want to withdraw\n");
+    scanf("%d",&with_amt);
+
+    if((amt-with_amt)<500)
+    {
+        printf("*****Transaction Declined*****\n (A minimum of Rs500 must be kept in the bank)\n");
+        goto label;
+    }
+
+    else
+    {
+        amt = amt - with_amt;
+        printf("*****Money withdrawn*****\n");
+        printf("Current balance : %d\n",amt);
+        fprintf(fp,"\nRs%d had been withdrawn from your account \n",with_amt);
+        fprintf(fp,"Date /time of transaction : %s\n",ctime(&tm));
+        count++;
+    }
+
+    fclose(fp);
+    printf("Press any key....\n");
+    getch();
+}
+
+
+
+
+
+void transfer_money()
+{
+    //write a code enter the password
+    time_t tm;
+    time(&tm);
+    FILE *fp = fopen("Account.txt","a");
+    printf("\n\n*****TRANSFERRING MONEY*****\n");
+    divider();
+
+    printf("\nEnter the account no. in which money has to be transferred : ");
+    scanf("%d",&ac);
+    transfering:
+    printf("\nEnter the amount you want to transfer\n");
+    scanf("%d",&trans_amt);
+
+    if((amt-trans_amt)<500)
+    {
+        printf("*****Transaction Declined*****\n (Please maintain atleast Rs 500 in bank account)");
+        goto transfering;
+    }
+
+    else
+    {
+        amt = amt-trans_amt;
+        printf("*****Money Transferred*****\n");
+        printf("Current balance : %d\n",amt);
+        fprintf(fp,"\nRs%d had been transferred from your account to %d\n",trans_amt,ac);
+        fprintf(fp,"Date /time of transaction : %s\n",ctime(&tm));
+        count++;
+    }
+
+    fclose(fp);
+    printf("Press any key....\n");
+    getch();
+}
+
+
+
+
+
+
+void account_details()
+{
+
+    printf("\n\nACCOUNT DETAILS\n");
+    divider();
+
+    printf("\nName : %s\n",name1);
+    printf("Account No. : %d\n",acc_no);
+    printf("Total balance = %d\n",amt);
+    printf("\n%d transactions have been made from your account \n",count);
+    printf("Press any key....");
+    getch();
+
+}
+
+
+
+
+void transaction_details()
+{
+    FILE *fp;
+    fp = fopen("Account.txt","r");
+    char c = fgetc(fp);
+    if(c==EOF)
+    {
+        printf("\n\nTRANSACTION DETAILS\n");
+        divider();
+        printf("\n*****NO RECENT TRANSACTION*****\n");
+    }
+
+    else
+    {
+        printf("\n\nTRANSACTION DETAILS\n");
+        divider();
+        printf("\n%d transactions have been made from your account\n",count);
+        while(c!=EOF)
+        {
+            printf("%c",c);
+            c = fgetc(fp);
+        }
+    }
+
+    printf("\nPress any key......\n");
+    getch();
+}
+
+
+void last_details()
+{
+    printf("\n\nACCOUNT DETAILS\n");
+    divider();
+    printf("\nName : %s\n",name1);
+    printf("Account No. : %d\n",acc_no);
+    printf("Total balance = %d\n",amt);
+
+    printf("\n\nPress any key to exit.....");
+    getch();
+}
